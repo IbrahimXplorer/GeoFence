@@ -1,30 +1,35 @@
 import React, { useEffect, useState } from 'react';
-import {
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View
-} from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import MapView, {
-    Circle,
-    LatLng,
-    MapPressEvent,
-    Marker,
-    Polygon,
-    PROVIDER_GOOGLE
+  Circle,
+  LatLng,
+  MapPressEvent,
+  Marker,
+  Polygon,
+  PROVIDER_GOOGLE,
 } from 'react-native-maps';
 import { useLocation } from '../../hooks/useLocation';
 import { colors } from '../../theme/colors';
+import uuid from 'react-native-uuid';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '../../store/store';
+import { addFence } from '../../store/slices/fenceSlice';
+import { FenceMetadataModal } from '../../components';
 
-type DrawMode = 'circle' | 'polygon';
+type DrawMode = 'circle' | 'polygon'; 
 
 export const HomeScreen = () => {
+  const dispatch = useDispatch<AppDispatch>();
   const [isGeoFencing, setIsGeoFencing] = useState(false);
   const [drawMode, setDrawMode] = useState<DrawMode>('circle');
   const [circleCenter, setCircleCenter] = useState<LatLng | null>(null);
   const [polygonPoints, setPolygonPoints] = useState<LatLng[]>([]);
   const { region, currentLocation, getCurrentLocation, mapRef } = useLocation();
-
+  const [showFenceMetaPrompt, setShowFenceMetaPrompt] = useState(false);
+  const [fenceName, setFenceName] = useState('');
+  const [fenceDescription, setFenceDescription] = useState('');
+const {fences} = useSelector((state:RootState)=>state.fence)
+console.log(fences,"what are the fences")
   const handleMapPress = (event: MapPressEvent) => {
     if (!isGeoFencing) return;
     const { coordinate } = event.nativeEvent;
@@ -38,9 +43,38 @@ export const HomeScreen = () => {
     }
   };
 
+  const handleSaveFence = (name: string, description: string) => {
+    const newFence = {
+      id: uuid.v4().toString(),
+      name,
+      description,
+      type: drawMode,
+      coordinates:
+        drawMode === 'circle' && circleCenter ? [circleCenter] : polygonPoints,
+      radius: drawMode === 'circle' ? 120 : undefined,
+      styling: {
+        strokeColor:
+          drawMode === 'circle' ? colors.lightDanger : colors.lightBlue,
+        fillColor: drawMode === 'circle' ? colors.darkDanger : colors.darkBlue,
+      },
+    };
+
+    dispatch(addFence(newFence));
+    setCircleCenter(null);
+    setPolygonPoints([]);
+    setShowFenceMetaPrompt(false);
+  };
+
   useEffect(() => {
     getCurrentLocation();
   }, []);
+
+  useEffect(() => {
+    if (isGeoFencing && (circleCenter || polygonPoints.length >= 3)) {
+      setShowFenceMetaPrompt(true);
+    }
+  }, [circleCenter, polygonPoints]);
+
   return (
     <View style={styles.container}>
       {region && (
@@ -129,6 +163,11 @@ export const HomeScreen = () => {
           </Text>
         </TouchableOpacity>
       )}
+      <FenceMetadataModal
+        visible={showFenceMetaPrompt}
+        onClose={() => setShowFenceMetaPrompt(false)}
+        onSave={handleSaveFence}
+      />
     </View>
   );
 };

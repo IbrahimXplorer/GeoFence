@@ -1,12 +1,12 @@
 import Geolocation from '@react-native-community/geolocation';
 import { useRef, useState } from 'react';
 import { PermissionsAndroid, Platform } from 'react-native';
-import { LatLng, MapView, Region } from 'react-native-maps';
+import { LatLng, Region } from 'react-native-maps';
 
 export const useLocation = () => {
   const [region, setRegion] = useState<Region | null>(null);
   const [currentLocation, setCurrentLocation] = useState<LatLng | null>(null);
-  const mapRef = useRef<MapView>(null);
+  const mapRef = useRef(null);
 
   const requestLocationPermission = async (): Promise<boolean> => {
     if (Platform.OS === 'android') {
