@@ -31,8 +31,12 @@
 		<key>NSAllowsLocalNetworking</key>
 		<true/>
 	</dict>
+	<key>NSLocationAlwaysUsageDescription</key>
+<string>This app needs access to your location even when the app is in the background.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
+<string>We use your location to show your position on the map and improve location-based experiences.</string>
+<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+<string>We need your location to show your position on the map.</string>
 	<key>RCTNewArchEnabled</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>
