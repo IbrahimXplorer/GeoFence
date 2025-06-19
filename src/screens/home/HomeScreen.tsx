@@ -1,218 +1,133 @@
-import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import MapView, {
-  Circle,
-  LatLng,
-  MapPressEvent,
-  Marker,
-  Polygon,
-  PROVIDER_GOOGLE,
-} from 'react-native-maps';
-import { useLocation } from '../../hooks/useLocation';
-import { colors } from '../../theme/colors';
-import uuid from 'react-native-uuid';
-import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch, RootState } from '../../store/store';
-import { addFence } from '../../store/slices/fenceSlice';
-import { FenceMetadataModal } from '../../components';
-
-type DrawMode = 'circle' | 'polygon'; 
+import { StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native';
+import React from 'react';
+import { FlashList } from '@shopify/flash-list';
+import { RootState } from '../../store/store';
+import { useSelector } from 'react-redux';
+import { useNavigation } from '@react-navigation/native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export const HomeScreen = () => {
-  const dispatch = useDispatch<AppDispatch>();
-  const [isGeoFencing, setIsGeoFencing] = useState(false);
-  const [drawMode, setDrawMode] = useState<DrawMode>('circle');
-  const [circleCenter, setCircleCenter] = useState<LatLng | null>(null);
-  const [polygonPoints, setPolygonPoints] = useState<LatLng[]>([]);
-  const { region, currentLocation, getCurrentLocation, mapRef } = useLocation();
-  const [showFenceMetaPrompt, setShowFenceMetaPrompt] = useState(false);
-  const [fenceName, setFenceName] = useState('');
-  const [fenceDescription, setFenceDescription] = useState('');
-const {fences} = useSelector((state:RootState)=>state.fence)
-console.log(fences,"what are the fences")
-  const handleMapPress = (event: MapPressEvent) => {
-    if (!isGeoFencing) return;
-    const { coordinate } = event.nativeEvent;
+  const fences = useSelector((state: RootState) => state.fence.fences);
+  const navigation = useNavigation();
 
-    if (drawMode === 'circle') {
-      setCircleCenter(coordinate);
-      setPolygonPoints([]);
-    } else if (drawMode === 'polygon') {
-      setPolygonPoints(prev => [...prev, coordinate]);
-      setCircleCenter(null);
-    }
-  };
+  const FenceListItem = ({
+    name,
+    description,
+  }: {
+    name: string;
+    description?: string;
+  }) => (
+    <View style={styles.itemContainer}>
+      <Image
+        source={{
+          uri: 'https://www.smartinsights.com/wp-content/uploads/2018/09/1.jpg',
+        }}
+        style={styles.itemImage}
+      />
+      <View style={{ flex: 1, paddingLeft: 10 }}>
+        <Text style={styles.itemTitle}>{name}</Text>
+        <Text style={styles.itemDescription}>
+          {description || 'No description'}
+        </Text>
+      </View>
+    </View>
+  );
 
-  const handleSaveFence = (name: string, description: string) => {
-    const newFence = {
-      id: uuid.v4().toString(),
-      name,
-      description,
-      type: drawMode,
-      coordinates:
-        drawMode === 'circle' && circleCenter ? [circleCenter] : polygonPoints,
-      radius: drawMode === 'circle' ? 120 : undefined,
-      styling: {
-        strokeColor:
-          drawMode === 'circle' ? colors.lightDanger : colors.lightBlue,
-        fillColor: drawMode === 'circle' ? colors.darkDanger : colors.darkBlue,
-      },
-    };
-
-    dispatch(addFence(newFence));
-    setCircleCenter(null);
-    setPolygonPoints([]);
-    setShowFenceMetaPrompt(false);
-  };
-
-  useEffect(() => {
-    getCurrentLocation();
-  }, []);
-
-  useEffect(() => {
-    if (isGeoFencing && (circleCenter || polygonPoints.length >= 3)) {
-      setShowFenceMetaPrompt(true);
-    }
-  }, [circleCenter, polygonPoints]);
+  const Header = () => (
+    <View style={styles.headerContainer}>
+      <Text style={styles.headerTitle}>Saved Fences</Text>
+      <TouchableOpacity
+        style={styles.mapButton}
+        onPress={() => navigation.navigate('Map' as never)}
+      >
+        <Text style={styles.mapButtonText}>Go to Map</Text>
+      </TouchableOpacity>
+    </View>
+  );
 
   return (
-    <View style={styles.container}>
-      {region && (
-        <MapView
-          ref={mapRef}
-          style={styles.map}
-          provider={PROVIDER_GOOGLE}
-          region={region}
-          onPress={handleMapPress}
-          showsUserLocation
-          showsMyLocationButton={false}
-        >
-          {circleCenter && (
-            <Circle
-              center={circleCenter}
-              radius={120}
-              strokeWidth={2}
-              strokeColor={colors.lightDanger}
-              fillColor={colors.darkDanger}
-            />
-          )}
-
-          {polygonPoints.length >= 3 && (
-            <Polygon
-              coordinates={polygonPoints}
-              strokeColor={colors.lightBlue}
-              fillColor={colors.darkBlue}
-              strokeWidth={2}
-            />
-          )}
-
-          {currentLocation && (
-            <Marker
-              coordinate={currentLocation}
-              title="You are here"
-              description="This is your current location"
-              pinColor="green"
-            />
-          )}
-        </MapView>
-      )}
-
-      {/* Re-center */}
-      <TouchableOpacity
-        style={styles.recenterButton}
-        onPress={getCurrentLocation}
-      >
-        <Text style={styles.buttonText}>Re-center</Text>
-      </TouchableOpacity>
-
-      {/* Fence Mode Toggle */}
-      <TouchableOpacity
-        style={[
-          styles.geoFenceButton,
-          {
-            backgroundColor: isGeoFencing ? colors.darkDanger : colors.success,
-          },
-        ]}
-        onPress={() => {
-          setIsGeoFencing(prev => {
-            const next = !prev;
-            if (!next) {
-              setCircleCenter(null);
-              setPolygonPoints([]);
-              setDrawMode('circle');
+    <SafeAreaView style={{ flex: 1 }}>
+      {fences.length > 0 && (
+        <View style={styles.listContainer}>
+          <Header />
+          <FlashList
+            ListEmptyComponent={
+              <Text style={styles.emptyText}>No fences saved yet.</Text>
             }
-            return next;
-          });
-        }}
-      >
-        <Text style={styles.buttonText}>
-          {isGeoFencing ? 'Exit Fence Mode' : 'Enter Fence Mode'}
-        </Text>
-      </TouchableOpacity>
-
-      {/* Drawing Mode Toggle */}
-      {isGeoFencing && (
-        <TouchableOpacity
-          style={styles.drawModeButton}
-          onPress={() =>
-            setDrawMode(prev => (prev === 'circle' ? 'polygon' : 'circle'))
-          }
-        >
-          <Text style={styles.buttonText}>
-            Mode: {drawMode === 'circle' ? 'Circle' : 'Polygon'}
-          </Text>
-        </TouchableOpacity>
+            data={fences}
+            keyExtractor={item => item.id}
+            renderItem={({ item }) => (
+              <FenceListItem name={item.name} description={item.description} />
+            )}
+            estimatedItemSize={80}
+          />
+        </View>
       )}
-      <FenceMetadataModal
-        visible={showFenceMetaPrompt}
-        onClose={() => setShowFenceMetaPrompt(false)}
-        onSave={handleSaveFence}
-      />
-    </View>
+    </SafeAreaView>
   );
 };
 
 export default HomeScreen;
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.light,
+  headerContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 10,
   },
-  map: {
-    ...StyleSheet.absoluteFillObject,
-  },
-  recenterButton: {
-    position: 'absolute',
-    bottom: 160,
-    right: 20,
-    backgroundColor: colors.lightBlue,
-    paddingVertical: 10,
-    paddingHorizontal: 16,
-    borderRadius: 8,
-    elevation: 4,
-  },
-  geoFenceButton: {
-    position: 'absolute',
-    bottom: 100,
-    right: 20,
-    paddingVertical: 10,
-    paddingHorizontal: 16,
-    borderRadius: 8,
-    elevation: 4,
-  },
-  drawModeButton: {
-    position: 'absolute',
-    bottom: 40,
-    right: 20,
-    backgroundColor: colors.secondary,
-    paddingVertical: 10,
-    paddingHorizontal: 16,
-    borderRadius: 8,
-    elevation: 4,
-  },
-  buttonText: {
-    color: colors.light,
+  headerTitle: {
+    fontSize: 18,
     fontWeight: 'bold',
+  },
+  mapButton: {
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    backgroundColor: '#2e86de',
+    borderRadius: 6,
+  },
+  mapButtonText: {
+    color: '#fff',
+    fontSize: 14,
+  },
+
+  listContainer: {
+    flex: 1,
+    padding: 10,
+    backgroundColor: '#fff',
+    borderTopWidth: 1,
+    borderColor: '#ddd',
+    marginTop: 10,
+  },
+  listHeader: {
+    fontWeight: 'bold',
+    fontSize: 16,
+    marginBottom: 8,
+  },
+  itemContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 10,
+    borderBottomWidth: 1,
+    borderColor: '#eee',
+  },
+  itemImage: {
+    width: 60,
+    height: 60,
+    borderRadius: 8,
+    backgroundColor: '#ccc',
+  },
+  itemTitle: {
+    fontSize: 15,
+    fontWeight: '600',
+  },
+  itemDescription: {
+    fontSize: 13,
+    color: '#666',
+  },
+  emptyText: {
+    textAlign: 'center',
+    marginTop: 20,
+    fontSize: 16,
   },
 });
