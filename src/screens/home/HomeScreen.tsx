@@ -1,24 +1,20 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
-  View,
-  StyleSheet,
-  PermissionsAndroid,
-  Platform,
-  TouchableOpacity,
-  Text,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    View
 } from 'react-native';
 import MapView, {
-  Marker,
-  PROVIDER_GOOGLE,
-  Region,
-  Circle,
-  LatLng,
-  MapPressEvent,
-  Polygon,
+    Circle,
+    LatLng,
+    MapPressEvent,
+    Marker,
+    Polygon,
+    PROVIDER_GOOGLE
 } from 'react-native-maps';
-import Geolocation from '@react-native-community/geolocation';
-import { colors } from '../../theme/colors';
 import { useLocation } from '../../hooks/useLocation';
+import { colors } from '../../theme/colors';
 
 type DrawMode = 'circle' | 'polygon';
 
