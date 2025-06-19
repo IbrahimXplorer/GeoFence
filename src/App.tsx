@@ -1,11 +1,9 @@
 import React from 'react'
-import { Text, View } from 'react-native'
+import Navigator from './navigator/navigator'
 
 const App = () => {
   return (
-    <View>
-      <Text>App</Text>
-    </View>
+   <Navigator/>
   )
 }
 
