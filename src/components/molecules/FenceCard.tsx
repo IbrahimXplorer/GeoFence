@@ -24,17 +24,23 @@ export const FenceCard: React.FC<FenceCardProps> = ({
         style={styles.itemImage}
       />
       <View style={styles.detailsContainer}>
-        <Text style={styles.itemTitle}>{name}</Text>
+        <Text style={styles.itemTitle}>{name}</Text> 
         <Text style={styles.itemDescription}>
           {description || 'No description'}
         </Text>
       </View>
       <View style={styles.buttonContainer}>
-        <TouchableOpacity style={styles.viewButton} onPress={onEdit}>
-          <Text style={styles.viewButtonText}>View</Text>
+        <TouchableOpacity onPress={onEdit}>
+          <Image
+            source={require('../../../assets/images/eye.png')}
+            style={styles.iconButton}
+          />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.deleteButton} onPress={onDelete}>
-          <Text style={styles.deleteButtonText}>Delete</Text>
+        <TouchableOpacity onPress={onDelete}>
+          <Image
+            source={require('../../../assets/images/delete.png')}
+            style={styles.iconButton}
+          />
         </TouchableOpacity>
       </View>
     </View>
@@ -73,30 +79,13 @@ const styles = StyleSheet.create({
     fontSize: 13,
   },
   buttonContainer: {
-    justifyContent: 'center',
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 4,
+    gap: 8,
   },
-  viewButton: {
-    backgroundColor: colors.lightBlue,
-    paddingVertical: 4,
-    paddingHorizontal: 10,
-    borderRadius: 4,
-    marginRight: 4,
-  },
-  viewButtonText: {
-    color: colors.light,
-    fontSize: 12,
-  },
-  deleteButton: {
-    backgroundColor: colors.lightDanger,
-    paddingVertical: 4,
-    paddingHorizontal: 10,
-    borderRadius: 4,
-  },
-  deleteButtonText: {
-    color: colors.light,
-    fontSize: 12,
+  iconButton: {
+    width: 24,
+    height: 24,
+    tintColor: colors.dark,
   },
 });
