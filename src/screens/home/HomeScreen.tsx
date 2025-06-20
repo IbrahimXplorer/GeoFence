@@ -1,18 +1,15 @@
 import { useNavigation } from '@react-navigation/native';
 import { FlashList } from '@shopify/flash-list';
-import React, { ReactElement, useEffect } from 'react';
+import React, { ReactElement } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useDispatch, useSelector } from 'react-redux';
 import { FenceCard } from '../../components';
+import { useAppPermissions } from '../../hooks/useAppPermissions';
+import { deleteFence } from '../../store/slices/fenceSlice';
 import { AppDispatch, RootState } from '../../store/store';
 import { colors } from '../../theme/colors';
-import { deleteFence } from '../../store/slices/fenceSlice';
 import { Fence } from '../../types/fence';
-import {
-  useAppPermissions,
-  useNotification,
-} from '../../hooks/useAppPermissions';
 
 export const HomeScreen = (): ReactElement => {
   const fences = useSelector((state: RootState) => state.fence.fences);
