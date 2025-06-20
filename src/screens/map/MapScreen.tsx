@@ -35,14 +35,19 @@ type MapScreenProps = {
 
 export const MapScreen: FC<MapScreenProps> = ({ navigation, route }) => {
   const dispatch = useDispatch<AppDispatch>();
+  const { selectedFence } = route?.params || {};
   const [isGeoFencing, setIsGeoFencing] = useState(false);
-  const [drawMode, setDrawMode] = useState<DrawMode>('circle');
-  const [viewModeFence, setViewModeFence] = useState<Fence | null>(null);
-  const [circleCenter, setCircleCenter] = useState<LatLng | null>(null);
-  const [polygonPoints, setPolygonPoints] = useState<LatLng[]>([]);
+  const [drawMode, setDrawMode] = useState<DrawMode>(
+    selectedFence?.type ?? 'circle',
+  );
+  const [circleCenter, setCircleCenter] = useState<LatLng | null>(
+    selectedFence?.type === 'circle' ? selectedFence.coordinates[0] : null,
+  );
+  const [polygonPoints, setPolygonPoints] = useState<LatLng[]>(
+    selectedFence?.type === 'polygon' ? selectedFence.coordinates : [],
+  );
   const { region, currentLocation, getCurrentLocation, mapRef } = useLocation();
   const [showFenceMetaPrompt, setShowFenceMetaPrompt] = useState(false);
-
 
   //actions
   const handleMapPress = (event: MapPressEvent) => {
@@ -78,24 +83,17 @@ export const MapScreen: FC<MapScreenProps> = ({ navigation, route }) => {
     setCircleCenter(null);
     setPolygonPoints([]);
     setShowFenceMetaPrompt(false);
-  };
-
-   const handleBackPress = () => {
     navigation.goBack();
   };
 
+  const handleBackPress = () => {
+    navigation.goBack();
+  };
 
   //side effects
   useEffect(() => {
     getCurrentLocation();
   }, []);
-
-  useEffect(() => {
-    if (route.params?.selectedFence) {
-      setIsGeoFencing(false);
-      setViewModeFence(route.params.selectedFence);
-    }
-  }, [route.params]);
 
   return (
     <View style={styles.container}>
@@ -120,44 +118,23 @@ export const MapScreen: FC<MapScreenProps> = ({ navigation, route }) => {
           showsUserLocation
           showsMyLocationButton={false}
         >
-          {viewModeFence ? (
-            viewModeFence.type === 'circle' ? (
-              <Circle
-                center={viewModeFence.coordinates[0]}
-                radius={viewModeFence.radius ?? 120}
-                strokeWidth={2}
-                strokeColor={viewModeFence.styling.strokeColor}
-                fillColor={viewModeFence.styling.fillColor}
-              />
-            ) : (
-              <Polygon
-                coordinates={viewModeFence.coordinates}
-                strokeColor={viewModeFence.styling.strokeColor}
-                fillColor={viewModeFence.styling.fillColor}
-                strokeWidth={2}
-              />
-            )
-          ) : (
-            <>
-              {circleCenter && (
-                <Circle
-                  center={circleCenter}
-                  radius={120}
-                  strokeWidth={2}
-                  strokeColor={colors.lightDanger}
-                  fillColor={colors.darkDanger}
-                />
-              )}
+          {circleCenter && (
+            <Circle
+              center={circleCenter}
+              radius={120}
+              strokeWidth={2}
+              strokeColor={colors.lightDanger}
+              fillColor={colors.darkDanger}
+            />
+          )}
 
-              {polygonPoints.length >= 3 && (
-                <Polygon
-                  coordinates={polygonPoints}
-                  strokeColor={colors.lightBlue}
-                  fillColor={colors.darkBlue}
-                  strokeWidth={2}
-                />
-              )}
-            </>
+          {polygonPoints.length >= 3 && (
+            <Polygon
+              coordinates={polygonPoints}
+              strokeColor={colors.lightBlue}
+              fillColor={colors.darkBlue}
+              strokeWidth={2}
+            />
           )}
 
           {currentLocation && (
