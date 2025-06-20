@@ -6098,6 +6098,11 @@ react-is@^19.1.0:
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-19.1.0.tgz#805bce321546b7e14c084989c77022351bbdd11b"
   integrity sha512-Oe56aUPnkHyyDxxkvqtd7KkdQP5uIUfHxd5XTb3wE9d/kRnZLmKbDB0GWk919tdQ+mxxPtG6EAs6RMT6i1qtHg==
 
+react-native-android-location-enabler@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/react-native-android-location-enabler/-/react-native-android-location-enabler-2.0.1.tgz#d3073d1ddc75c1afa304948156de3347fbf47174"
+  integrity sha512-hDNfQL4gImrmc6K6J44kd2iKrpPHc23V4stujNIg3I1LvYLT+kwWmfTGapeY0hl6EXACfaFdm/wBb4ggtNcnPA==
+
 react-native-bootsplash@^6.3.9:
   version "6.3.9"
   resolved "https://registry.yarnpkg.com/react-native-bootsplash/-/react-native-bootsplash-6.3.9.tgz#848a2084929d0984da53b28116d32972d919313d"

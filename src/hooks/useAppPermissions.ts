@@ -3,6 +3,9 @@ import { useEffect } from 'react';
 import { PermissionsAndroid, Platform } from 'react-native';
 import { PERMISSIONS, request, RESULTS } from 'react-native-permissions';
 
+import { promptForEnableLocationIfNeeded } from 'react-native-android-location-enabler';
+
+
 export const useAppPermissions = () => {
   useEffect(() => {
     const requestPermissions = async () => {
@@ -17,6 +20,7 @@ export const useAppPermissions = () => {
           }
 
           console.log('location access granted');
+          await promptForEnableLocationIfNeeded()
         } else {
           const status = await request(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE);
           if (status !== RESULTS.GRANTED) {
