@@ -18,6 +18,8 @@ import { RootStackParamList } from '../../navigator/stack/RootStack';
 import { addFence, editFence } from '../../store/slices/fenceSlice';
 import { AppDispatch } from '../../store/store';
 import { colors } from '../../theme/colors';
+import notifee from '@notifee/react-native';
+
 
 type DrawMode = 'circle' | 'polygon';
 
@@ -66,7 +68,7 @@ export const MapScreen: FC<MapScreenProps> = ({ navigation, route }) => {
     }
   };
 
-  const handleSaveFence = (name: string, description: string) => {
+  const handleSaveFence = () => {
     const newFence = {
       id: selectedFence?.id ?? uuid.v4().toString(),
       name,
@@ -103,6 +105,7 @@ export const MapScreen: FC<MapScreenProps> = ({ navigation, route }) => {
   //side effects
   useEffect(() => {
     getCurrentLocation();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

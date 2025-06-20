@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import {
   Image,
   Modal,
@@ -16,7 +16,7 @@ interface Props {
   setName: (val: string) => void;
   setDescription: (val: string) => void;
   visible: boolean;
-  onClose: () => void;
+  onClose: () => void; 
   onSave: (name: string, description: string) => void;
 }
 
