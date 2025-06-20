@@ -5,5 +5,6 @@ export const colors = {
   darkBlue: 'rgba(0, 150, 255, 0.2)',
   success: '#4cd964',
   secondary:'#5856D6',
-  light:"#FFF"
+  light:"#FFF",
+  gray:'#ddd'
 };

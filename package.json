@@ -23,6 +23,7 @@
     "@shopify/flash-list": "^2.0.0-rc.9",
     "react": "19.0.0",
     "react-native": "0.79.3",
+    "react-native-bootsplash": "^6.3.9",
     "react-native-maps": "^1.14.0",
     "react-native-mmkv": "^3.3.0",
     "react-native-safe-area-context": "^5.4.1",

@@ -5,11 +5,13 @@ import { RootState } from '../../store/store';
 import { useSelector } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { colors } from '../../theme/colors';
 
 export const HomeScreen = () => {
   const fences = useSelector((state: RootState) => state.fence.fences);
   const navigation = useNavigation();
 
+  // eslint-disable-next-line react/no-unstable-nested-components
   const FenceListItem = ({
     name,
     description,
@@ -33,6 +35,7 @@ export const HomeScreen = () => {
     </View>
   );
 
+  // eslint-disable-next-line react/no-unstable-nested-components
   const Header = () => (
     <View style={styles.headerContainer}>
       <Text style={styles.headerTitle}>Saved Fences</Text>
@@ -46,23 +49,21 @@ export const HomeScreen = () => {
   );
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
-      {fences.length > 0 && (
-        <View style={styles.listContainer}>
-          <Header />
-          <FlashList
-            ListEmptyComponent={
-              <Text style={styles.emptyText}>No fences saved yet.</Text>
-            }
-            data={fences}
-            keyExtractor={item => item.id}
-            renderItem={({ item }) => (
-              <FenceListItem name={item.name} description={item.description} />
-            )}
-            estimatedItemSize={80}
-          />
-        </View>
-      )}
+    <SafeAreaView style={styles.screen}>
+      <Header />
+      <View style={styles.listContainer}>
+        <FlashList
+          ListEmptyComponent={
+            <Text style={styles.emptyText}>No fences saved yet.</Text>
+          }
+          data={fences}
+          keyExtractor={item => item.id}
+          renderItem={({ item }) => (
+            <FenceListItem name={item.name} description={item.description} />
+          )}
+          estimatedItemSize={80}
+        />
+      </View>
     </SafeAreaView>
   );
 };
@@ -70,11 +71,13 @@ export const HomeScreen = () => {
 export default HomeScreen;
 
 const styles = StyleSheet.create({
+  screen: { flex: 1},
   headerContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: 10,
+    paddingHorizontal: 10,
   },
   headerTitle: {
     fontSize: 18,
@@ -83,39 +86,45 @@ const styles = StyleSheet.create({
   mapButton: {
     paddingVertical: 6,
     paddingHorizontal: 12,
-    backgroundColor: '#2e86de',
+    backgroundColor: colors.lightBlue,
     borderRadius: 6,
   },
   mapButtonText: {
-    color: '#fff',
+    color: colors.light,
     fontSize: 14,
   },
 
   listContainer: {
     flex: 1,
-    padding: 10,
-    backgroundColor: '#fff',
+    backgroundColor: colors.light,
     borderTopWidth: 1,
-    borderColor: '#ddd',
+    borderColor: colors.gray,
     marginTop: 10,
+    paddingHorizontal:10
   },
   listHeader: {
     fontWeight: 'bold',
     fontSize: 16,
     marginBottom: 8,
   },
-  itemContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: 10,
-    borderBottomWidth: 1,
-    borderColor: '#eee',
-  },
+ itemContainer: {
+  flexDirection: 'row',
+  alignItems: 'center',
+  padding: 10,
+  marginHorizontal:10,
+  marginVertical: 6,
+  borderRadius: 8,
+  backgroundColor: '#fff',
+  elevation: 3,
+  shadowColor: '#000',
+  shadowOffset: { width: 0, height: 2 },
+  shadowOpacity: 0.2,
+  shadowRadius: 4,
+},
   itemImage: {
     width: 60,
     height: 60,
     borderRadius: 8,
-    backgroundColor: '#ccc',
   },
   itemTitle: {
     fontSize: 15,
@@ -123,7 +132,6 @@ const styles = StyleSheet.create({
   },
   itemDescription: {
     fontSize: 13,
-    color: '#666',
   },
   emptyText: {
     textAlign: 'center',

@@ -8,10 +8,12 @@
 
 /* Begin PBXBuildFile section */
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
+		1C5ED7D4C0504EE1B25E17B5 /* Colors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2AB40A8EAD15492486B24603 /* Colors.xcassets */; };
 		53FCD8A735EBE1927DD13571 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */; };
 		761780ED2CA45674006654EE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 761780EC2CA45674006654EE /* AppDelegate.swift */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		93063D0AEF0ADE7E2EC1A22D /* libPods-GeoFence.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 44325F68CB0FC8A5EAF757B6 /* libPods-GeoFence.a */; };
+		EDF3421C464F4C2DBED7A5ED /* BootSplash.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8EEB2CE50CC04684B0B62F5A /* BootSplash.storyboard */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -19,9 +21,11 @@
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = GeoFence/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = GeoFence/Info.plist; sourceTree = "<group>"; };
 		13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = PrivacyInfo.xcprivacy; path = GeoFence/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		2AB40A8EAD15492486B24603 /* Colors.xcassets */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = folder.assetcatalog; name = Colors.xcassets; path = GeoFence/Colors.xcassets; sourceTree = "<group>"; };
 		44325F68CB0FC8A5EAF757B6 /* libPods-GeoFence.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-GeoFence.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		761780EC2CA45674006654EE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = GeoFence/AppDelegate.swift; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = GeoFence/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		8EEB2CE50CC04684B0B62F5A /* BootSplash.storyboard */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = BootSplash.storyboard; path = GeoFence/BootSplash.storyboard; sourceTree = "<group>"; };
 		D1FFA37B46EFE5684D83BDD7 /* Pods-GeoFence.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GeoFence.debug.xcconfig"; path = "Target Support Files/Pods-GeoFence/Pods-GeoFence.debug.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		FBB84110E8A830EF20B6092F /* Pods-GeoFence.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GeoFence.release.xcconfig"; path = "Target Support Files/Pods-GeoFence/Pods-GeoFence.release.xcconfig"; sourceTree = "<group>"; };
@@ -47,6 +51,8 @@
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
 				13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */,
+				8EEB2CE50CC04684B0B62F5A /* BootSplash.storyboard */,
+				2AB40A8EAD15492486B24603 /* Colors.xcassets */,
 			);
 			name = GeoFence;
 			sourceTree = "<group>";
@@ -161,6 +167,8 @@
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				53FCD8A735EBE1927DD13571 /* PrivacyInfo.xcprivacy in Resources */,
+				EDF3421C464F4C2DBED7A5ED /* BootSplash.storyboard in Resources */,
+				1C5ED7D4C0504EE1B25E17B5 /* Colors.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
