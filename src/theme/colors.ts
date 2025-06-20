@@ -6,5 +6,6 @@ export const colors = {
   success: '#4cd964',
   secondary:'#5856D6',
   light:"#FFF",
+  dark:"#000",
   gray:'#ddd'
 };
