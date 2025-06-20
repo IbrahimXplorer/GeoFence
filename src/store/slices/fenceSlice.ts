@@ -1,20 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { LatLng } from 'react-native-maps';
-
-export type DrawMode = 'circle' | 'polygon';
-
-export interface Fence {
-  id: string;
-  name: string;
-  description?: string;
-  type: DrawMode;
-  coordinates: LatLng[];
-  radius?: number;
-  styling: {
-    strokeColor: string;
-    fillColor: string;
-  };
-}
+import { Fence } from '../../types/fence';
 
 interface FenceState {
   fences: Fence[];

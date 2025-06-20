@@ -8,11 +8,16 @@ import { FenceCard } from '../../components';
 import { AppDispatch, RootState } from '../../store/store';
 import { colors } from '../../theme/colors';
 import { deleteFence } from '../../store/slices/fenceSlice';
+import { Fence } from '../../types/fence';
 
 export const HomeScreen = (): ReactElement => {
   const fences = useSelector((state: RootState) => state.fence.fences);
   const navigation = useNavigation();
   const dispatch = useDispatch<AppDispatch>();
+
+  const handleViewMap = (fence:Fence)=>{
+    navigation.navigate('Map',{selectedFence:fence})
+  }
 
   // eslint-disable-next-line react/no-unstable-nested-components
   const Header = () => (
@@ -41,7 +46,7 @@ export const HomeScreen = (): ReactElement => {
             <FenceCard
               name={item.name}
               description={item.description}
-              onEdit={() => console.log('Edit', item.id)}
+              onEdit={() => handleViewMap(item)}
               onDelete={() => dispatch(deleteFence(item.id))}
             />
           )}
