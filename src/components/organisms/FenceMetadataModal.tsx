@@ -1,35 +1,34 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import {
+  Image,
   Modal,
-  View,
+  StyleSheet,
   Text,
   TextInput,
-  StyleSheet,
   TouchableOpacity,
+  View,
 } from 'react-native';
 import { colors } from '../../theme/colors';
 
 interface Props {
+  name: string;
+  description: string;
+  setName: (val: string) => void;
+  setDescription: (val: string) => void;
   visible: boolean;
   onClose: () => void;
   onSave: (name: string, description: string) => void;
 }
 
 export const FenceMetadataModal: React.FC<Props> = ({
-  visible,
+  name,
+  setName,
+  description,
+  setDescription,
+  visible = false,
   onClose,
   onSave,
 }) => {
-  const [name, setName] = useState('');
-  const [description, setDescription] = useState('');
-
-  useEffect(() => {
-    if (!visible) {
-      setName('');
-      setDescription('');
-    }
-  }, [visible]);
-
   return (
     <Modal transparent visible={visible} animationType="slide">
       <View style={styles.overlay}>
@@ -57,7 +56,10 @@ export const FenceMetadataModal: React.FC<Props> = ({
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.cancelButton} onPress={onClose}>
-            <Text style={styles.buttonText}>Cancel</Text>
+            <Image
+              source={require('../../../assets/images/cancel.png')}
+              style={styles.iconButton}
+            />
           </TouchableOpacity>
         </View>
       </View>
@@ -98,13 +100,19 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   cancelButton: {
-    backgroundColor: colors.darkDanger,
     padding: 10,
-    borderRadius: 8,
-    alignItems: 'center',
+    borderRadius: 100,
+    alignSelf: 'center',
+    position:"absolute",
+    right:10,
+    top:10
   },
   buttonText: {
     color: colors.light,
     fontWeight: 'bold',
+  },
+  iconButton: {
+    width: 24,
+    height: 24,
   },
 });

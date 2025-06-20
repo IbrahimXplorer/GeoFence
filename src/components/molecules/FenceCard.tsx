@@ -24,7 +24,7 @@ export const FenceCard: React.FC<FenceCardProps> = ({
         style={styles.itemImage}
       />
       <View style={styles.detailsContainer}>
-        <Text style={styles.itemTitle}>{name}</Text> 
+        <Text style={styles.itemTitle}>{name}</Text>
         <Text style={styles.itemDescription}>
           {description || 'No description'}
         </Text>
@@ -39,7 +39,7 @@ export const FenceCard: React.FC<FenceCardProps> = ({
         <TouchableOpacity onPress={onDelete}>
           <Image
             source={require('../../../assets/images/delete.png')}
-            style={styles.iconButton}
+            style={styles.deleteButton}
           />
         </TouchableOpacity>
       </View>
@@ -77,6 +77,7 @@ const styles = StyleSheet.create({
   },
   itemDescription: {
     fontSize: 13,
+    color: colors.dark,
   },
   buttonContainer: {
     flexDirection: 'row',
@@ -86,6 +87,10 @@ const styles = StyleSheet.create({
   iconButton: {
     width: 24,
     height: 24,
-    tintColor: colors.dark,
+    tintColor: colors.lightBlue,
+  },
+  deleteButton: {
+    width: 24,
+    height: 24,
   },
 });

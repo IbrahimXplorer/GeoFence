@@ -1,7 +1,7 @@
 import { RouteProp } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import React, { FC, useEffect, useState } from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import MapView, {
   Circle,
   LatLng,
@@ -15,10 +15,9 @@ import { useDispatch } from 'react-redux';
 import { BackButton, FenceMetadataModal } from '../../components';
 import { useLocation } from '../../hooks/useLocation';
 import { RootStackParamList } from '../../navigator/stack/RootStack';
-import { addFence } from '../../store/slices/fenceSlice';
+import { addFence, editFence } from '../../store/slices/fenceSlice';
 import { AppDispatch } from '../../store/store';
 import { colors } from '../../theme/colors';
-import { Fence } from '../../types/fence';
 
 type DrawMode = 'circle' | 'polygon';
 
@@ -37,6 +36,10 @@ export const MapScreen: FC<MapScreenProps> = ({ navigation, route }) => {
   const dispatch = useDispatch<AppDispatch>();
   const { selectedFence } = route?.params || {};
   const [isGeoFencing, setIsGeoFencing] = useState(false);
+  const [name, setName] = useState(selectedFence?.name || '');
+  const [description, setDescription] = useState(
+    selectedFence?.description || '',
+  );
   const [drawMode, setDrawMode] = useState<DrawMode>(
     selectedFence?.type ?? 'circle',
   );
@@ -65,7 +68,7 @@ export const MapScreen: FC<MapScreenProps> = ({ navigation, route }) => {
 
   const handleSaveFence = (name: string, description: string) => {
     const newFence = {
-      id: uuid.v4().toString(),
+      id: selectedFence?.id ?? uuid.v4().toString(),
       name,
       description,
       type: drawMode,
@@ -79,10 +82,17 @@ export const MapScreen: FC<MapScreenProps> = ({ navigation, route }) => {
       },
     };
 
-    dispatch(addFence(newFence));
+    if (selectedFence?.id) {
+      dispatch(editFence(newFence));
+    } else {
+      dispatch(addFence(newFence));
+    }
     setCircleCenter(null);
     setPolygonPoints([]);
     setShowFenceMetaPrompt(false);
+    Alert.alert(
+      `Fench ${selectedFence?.id ? 'updated' : 'created'} successfully!`,
+    );
     navigation.goBack();
   };
 
@@ -195,6 +205,10 @@ export const MapScreen: FC<MapScreenProps> = ({ navigation, route }) => {
         </TouchableOpacity>
       )}
       <FenceMetadataModal
+        name={name}
+        description={description}
+        setName={setName}
+        setDescription={setDescription}
         visible={showFenceMetaPrompt}
         onClose={() => setShowFenceMetaPrompt(false)}
         onSave={handleSaveFence}
