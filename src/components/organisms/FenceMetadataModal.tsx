@@ -60,7 +60,7 @@ export const FenceMetadataModal: React.FC<FenceMetadataModalProps> = ({
 
           <TextInput
             style={[styles.input, error && styles.inputError]}
-            placeholder="Fence Name"
+            placeholder="Enter Fence Name"
             value={name}
             placeholderTextColor={colors.dark}
             onChangeText={handleChangeName}
@@ -69,7 +69,7 @@ export const FenceMetadataModal: React.FC<FenceMetadataModalProps> = ({
 
           <TextInput
             style={styles.input}
-            placeholder="Description (optional)"
+            placeholder="Enter Description"
             value={description}
             placeholderTextColor={colors.dark}
             onChangeText={setDescription}
