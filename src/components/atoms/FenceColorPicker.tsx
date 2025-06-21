@@ -1,15 +1,8 @@
 import React from 'react';
 import { Modal, StyleSheet, View } from 'react-native';
 import ColorPicker, {
-  Panel1,
-  Swatches,
-  Preview,
-  OpacitySlider,
-  HueSlider,
-  ColorFormatsObject,
-  Panel2,
-  Panel3,
-  Panel4,
+    ColorFormatsObject,
+    Panel3
 } from 'reanimated-color-picker';
 
 type FenceColorPickerProps = {

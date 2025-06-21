@@ -43,7 +43,7 @@ export const MapScreen: FC<MapScreenProps> = ({ navigation, route }) => {
     selectedFence?.description || '',
   );
   const [drawMode, setDrawMode] = useState<DrawMode>(
-    selectedFence?.type ?? 'circle',
+    selectedFence?.type ?? 'polygon',
   );
   const [circleCenter, setCircleCenter] = useState<LatLng | null>(
     selectedFence?.type === 'circle' ? selectedFence.coordinates[0] : null,
@@ -56,6 +56,9 @@ export const MapScreen: FC<MapScreenProps> = ({ navigation, route }) => {
   const [strokeColor, setStrokeColor] = useState(colors.lightBlue);
   const [fillColor, setFillColor] = useState(colors.darkBlue);
   const [showColorPicker, setShowColorPicker] = useState(false);
+
+  const isGeoFencingEnabled =
+    isGeoFencing && (circleCenter || polygonPoints.length >= 3);
 
   //actions
   const handleMapPress = (event: MapPressEvent) => {
@@ -94,9 +97,11 @@ export const MapScreen: FC<MapScreenProps> = ({ navigation, route }) => {
     setCircleCenter(null);
     setPolygonPoints([]);
     setShowFenceMetaPrompt(false);
+
     Alert.alert(
       `Fench ${selectedFence?.id ? 'updated' : 'created'} successfully!`,
     );
+
     navigation.goBack();
   };
 
@@ -119,7 +124,6 @@ export const MapScreen: FC<MapScreenProps> = ({ navigation, route }) => {
   //side effects
   useEffect(() => {
     getCurrentLocation();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -131,17 +135,19 @@ export const MapScreen: FC<MapScreenProps> = ({ navigation, route }) => {
     }
   }, []);
 
+  console.log(selectedFence)
+
   return (
     <View style={styles.container}>
       <View style={styles.backActionWrapper}>
         <BackButton onPress={handleBackPress} />
       </View>
-      {isGeoFencing && (circleCenter || polygonPoints.length >= 3) && (
+      {isGeoFencingEnabled && (
         <TouchableOpacity
           style={styles.saveButton}
           onPress={() => setShowFenceMetaPrompt(true)}
         >
-          <Text>Store fence</Text>
+          <Text>{selectedFence ? 'Update Fence' : 'Store Fence'}</Text>
         </TouchableOpacity>
       )}
       {region && (
@@ -164,7 +170,7 @@ export const MapScreen: FC<MapScreenProps> = ({ navigation, route }) => {
             />
           )}
 
-          {polygonPoints.length >= 3 && (
+          {polygonPoints.length >= 2 && (
             <Polygon
               coordinates={polygonPoints}
               strokeColor={strokeColor}
@@ -184,7 +190,6 @@ export const MapScreen: FC<MapScreenProps> = ({ navigation, route }) => {
         </MapView>
       )}
 
-      {/* Re-center */}
       <TouchableOpacity
         style={styles.recenterButton}
         onPress={getCurrentLocation}
@@ -192,12 +197,11 @@ export const MapScreen: FC<MapScreenProps> = ({ navigation, route }) => {
         <Text style={styles.buttonText}>Re-center</Text>
       </TouchableOpacity>
 
-      {/* Fence Mode Toggle */}
       <TouchableOpacity
         style={[
           styles.geoFenceButton,
           {
-            backgroundColor: isGeoFencing ? colors.darkDanger : colors.success,
+            backgroundColor: isGeoFencing ? colors.lightDanger : colors.success,
           },
         ]}
         onPress={() => {
@@ -217,7 +221,7 @@ export const MapScreen: FC<MapScreenProps> = ({ navigation, route }) => {
         </Text>
       </TouchableOpacity>
 
-      {isGeoFencing && (circleCenter || polygonPoints.length >= 3) && (
+      {isGeoFencing && (
         <TouchableOpacity
           style={styles.drawModeButton}
           onPress={() =>
@@ -230,12 +234,12 @@ export const MapScreen: FC<MapScreenProps> = ({ navigation, route }) => {
         </TouchableOpacity>
       )}
 
-      {isGeoFencing && (
+      {isGeoFencingEnabled && (
         <TouchableOpacity
           style={[styles.drawModeButton, { top: 100, bottom: undefined }]}
           onPress={() => setShowColorPicker(prev => !prev)}
         >
-          <Text style={styles.buttonText}>🎨 Pick Color</Text>
+          <Text style={styles.buttonText}>🎨 Pick Fence Color</Text>
         </TouchableOpacity>
       )}
 
@@ -313,11 +317,13 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 40,
     right: 20,
-    backgroundColor: colors.secondary,
+    backgroundColor: colors.dark,
     paddingVertical: 10,
     paddingHorizontal: 16,
     borderRadius: 8,
     elevation: 4,
+    borderWidth: 0.5,
+    borderColor: colors.light,
   },
   buttonText: {
     color: colors.light,
