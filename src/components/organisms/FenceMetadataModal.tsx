@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import {
   Image,
   Modal,
@@ -10,48 +10,72 @@ import {
 } from 'react-native';
 import { colors } from '../../theme/colors';
 
-interface Props {
+interface FenceMetadataModalProps {
   name: string;
   description: string;
   setName: (val: string) => void;
   setDescription: (val: string) => void;
   visible: boolean;
-  onClose: () => void; 
+  onClose: () => void;
   onSave: (name: string, description: string) => void;
 }
 
-export const FenceMetadataModal: React.FC<Props> = ({
+export const FenceMetadataModal: React.FC<FenceMetadataModalProps> = ({
   name,
   setName,
   description,
   setDescription,
-  visible = false,
+  visible,
   onClose,
   onSave,
 }) => {
+  const [error, setError] = useState('');
+
+  const isNameValid = useMemo(() => name.trim().length > 0, [name]);
+
+  const handleChangeName = useCallback(
+    (val: string) => {
+      setName(val);
+      if (error) setError('');
+    },
+    [error, setName],
+  );
+
+  const handleSave = useCallback(() => {
+    if (!isNameValid) {
+      setError('Title is required');
+      return;
+    }
+
+    onSave(name.trim(), description.trim());
+  }, [name, description, isNameValid, onSave]);
+
+  if (!visible) return null;
+
   return (
-    <Modal transparent visible={visible} animationType="slide">
+    <Modal transparent animationType="slide" visible>
       <View style={styles.overlay}>
         <View style={styles.container}>
           <Text style={styles.title}>Name Your Fence</Text>
 
           <TextInput
-            style={styles.input}
+            style={[styles.input, error && styles.inputError]}
             placeholder="Fence Name"
             value={name}
-            onChangeText={setName}
+            placeholderTextColor={colors.dark}
+            onChangeText={handleChangeName}
           />
+          {!!error && <Text style={styles.errorText}>{error}</Text>}
+
           <TextInput
             style={styles.input}
             placeholder="Description (optional)"
             value={description}
+            placeholderTextColor={colors.dark}
             onChangeText={setDescription}
           />
 
-          <TouchableOpacity
-            style={styles.saveButton}
-            onPress={() => onSave(name, description)}
-          >
+          <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
             <Text style={styles.buttonText}>Save</Text>
           </TouchableOpacity>
 
@@ -70,7 +94,7 @@ export const FenceMetadataModal: React.FC<Props> = ({
 const styles = StyleSheet.create({
   overlay: {
     flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.4)',
+    backgroundColor: colors.overlay,
     justifyContent: 'center',
     padding: 20,
   },
@@ -79,6 +103,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     padding: 16,
     elevation: 6,
+    position: 'relative',
   },
   title: {
     fontSize: 16,
@@ -88,9 +113,19 @@ const styles = StyleSheet.create({
   },
   input: {
     borderBottomWidth: 1,
-    marginBottom: 16,
+    borderColor: colors.gray,
+    marginBottom: 10,
     paddingVertical: 8,
     paddingHorizontal: 4,
+    color: colors.dark,
+  },
+  inputError: {
+    borderColor: 'red',
+  },
+  errorText: {
+    color: 'red',
+    fontSize: 12,
+    marginBottom: 10,
   },
   saveButton: {
     backgroundColor: colors.success,
@@ -102,10 +137,9 @@ const styles = StyleSheet.create({
   cancelButton: {
     padding: 10,
     borderRadius: 100,
-    alignSelf: 'center',
-    position:"absolute",
-    right:10,
-    top:10
+    position: 'absolute',
+    right: 10,
+    top: 10,
   },
   buttonText: {
     color: colors.light,

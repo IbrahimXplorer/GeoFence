@@ -7,5 +7,6 @@ export const colors = {
   secondary:'#5856D6',
   light:"#FFF",
   dark:"#000",
-  gray:'#ddd'
+  gray:'#ddd',
+  overlay: 'rgba(0,0,0,0.4)'
 };
