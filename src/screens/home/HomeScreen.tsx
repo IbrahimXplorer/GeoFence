@@ -1,19 +1,33 @@
-import { useNavigation } from '@react-navigation/native';
+import { RouteProp } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { FlashList } from '@shopify/flash-list';
-import React, { ReactElement } from 'react';
+import React, { FC, ReactElement } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useDispatch, useSelector } from 'react-redux';
 import { FenceCard } from '../../components';
 import { useAppPermissions } from '../../hooks/useAppPermissions';
+import { RootStackParamList } from '../../navigator/stack/RootStack';
 import { deleteFence } from '../../store/slices/fenceSlice';
 import { AppDispatch, RootState } from '../../store/store';
 import { colors } from '../../theme/colors';
 import { Fence } from '../../types/fence';
 
-export const HomeScreen = (): ReactElement => {
+type HomeScreenRouteProp = RouteProp<RootStackParamList, 'Home'>;
+type HomeScreenNavigationProp = NativeStackNavigationProp<
+  RootStackParamList,
+  'Map'
+>;
+
+type HomeScreenProps = {
+  route: HomeScreenRouteProp;
+  navigation: HomeScreenNavigationProp;
+};
+
+export const HomeScreen: FC<HomeScreenProps> = ({
+  navigation,
+}): ReactElement => {
   const fences = useSelector((state: RootState) => state.fence.fences);
-  const navigation = useNavigation();
   const dispatch = useDispatch<AppDispatch>();
   useAppPermissions();
 
