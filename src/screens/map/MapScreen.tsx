@@ -99,10 +99,12 @@ export const MapScreen: FC<MapScreenProps> = ({ navigation, route }) => {
 
   const handleBackPress = () => {
     navigation.goBack();
-    showLocalNotification(
+    if (selectedFence) {
+      showLocalNotification(
       'Hi there!',
       `You exited ${selectedFence?.name} ${selectedFence?.description} area`,
     );
+    }
   };
 
   //side effects
