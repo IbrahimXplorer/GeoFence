@@ -16,9 +16,6 @@ export const fenceSlice = createSlice({
     addFence: (state, action: PayloadAction<Fence>) => {
       state.fences.push(action.payload);
     },
-    setFences: (state, action: PayloadAction<Fence[]>) => {
-      state.fences = action.payload;
-    },
     editFence: (state, action: PayloadAction<Fence>) => {
       const index = state.fences.findIndex(f => f.id === action.payload.id);
       if (index !== -1) {
@@ -31,6 +28,5 @@ export const fenceSlice = createSlice({
   },
 });
 
-export const { addFence, setFences, editFence, deleteFence } =
-  fenceSlice.actions;
+export const { addFence, editFence, deleteFence } = fenceSlice.actions;
 export default fenceSlice.reducer;
