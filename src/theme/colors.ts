@@ -4,9 +4,9 @@ export const colors = {
   lightBlue: 'rgba(0, 150, 255, 1)',
   darkBlue: 'rgba(0, 150, 255, 0.2)',
   success: '#4cd964',
-  secondary:'#5856D6',
-  light:"#FFF",
-  dark:"#000",
-  gray:'#ddd',
-  overlay: 'rgba(0,0,0,0.4)'
+  secondary: '#5856D6',
+  light: '#FFF',
+  dark: '#000',
+  gray: '#ddd',
+  overlay: 'rgba(0,0,0,0.4)',
 };

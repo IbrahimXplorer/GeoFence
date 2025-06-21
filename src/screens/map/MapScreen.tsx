@@ -13,14 +13,15 @@ import MapView, {
 import uuid from 'react-native-uuid';
 import { useDispatch } from 'react-redux';
 import { BackButton, FenceMetadataModal } from '../../components';
+import FenceColorPicker from '../../components/atoms/FenceColorPicker';
 import { useLocation } from '../../hooks/useLocation';
 import { RootStackParamList } from '../../navigator/stack/RootStack';
 import { addFence, editFence } from '../../store/slices/fenceSlice';
 import { AppDispatch } from '../../store/store';
 import { colors } from '../../theme/colors';
 import { showLocalNotification } from '../../utils/notificationHelper';
-
-type DrawMode = 'circle' | 'polygon';
+import { hexToRgba } from '../../utils/stringHelper';
+import { DrawMode } from '../../types/fence';
 
 type MapScreenRouteProp = RouteProp<RootStackParamList, 'Map'>;
 type MapScreenNavigationProp = NativeStackNavigationProp<
@@ -52,6 +53,9 @@ export const MapScreen: FC<MapScreenProps> = ({ navigation, route }) => {
   );
   const { region, currentLocation, getCurrentLocation, mapRef } = useLocation();
   const [showFenceMetaPrompt, setShowFenceMetaPrompt] = useState(false);
+  const [strokeColor, setStrokeColor] = useState(colors.lightBlue);
+  const [fillColor, setFillColor] = useState(colors.darkBlue);
+  const [showColorPicker, setShowColorPicker] = useState(false);
 
   //actions
   const handleMapPress = (event: MapPressEvent) => {
@@ -77,9 +81,8 @@ export const MapScreen: FC<MapScreenProps> = ({ navigation, route }) => {
         drawMode === 'circle' && circleCenter ? [circleCenter] : polygonPoints,
       radius: drawMode === 'circle' ? 120 : undefined,
       styling: {
-        strokeColor:
-          drawMode === 'circle' ? colors.lightDanger : colors.lightBlue,
-        fillColor: drawMode === 'circle' ? colors.darkDanger : colors.darkBlue,
+        strokeColor,
+        fillColor,
       },
     };
 
@@ -101,10 +104,16 @@ export const MapScreen: FC<MapScreenProps> = ({ navigation, route }) => {
     navigation.goBack();
     if (selectedFence) {
       showLocalNotification(
-      'Hi there!',
-      `You exited ${selectedFence?.name} ${selectedFence?.description} area`,
-    );
+        'Hi there!',
+        `You exited ${selectedFence?.name} ${selectedFence?.description} area`,
+      );
     }
+  };
+
+  const onSelectColor = ({ hex }: { hex: string }) => {
+    setStrokeColor(hexToRgba(hex, 1));
+    setFillColor(hexToRgba(hex, 0.2));
+    setShowColorPicker(false);
   };
 
   //side effects
@@ -150,16 +159,16 @@ export const MapScreen: FC<MapScreenProps> = ({ navigation, route }) => {
               center={circleCenter}
               radius={120}
               strokeWidth={2}
-              strokeColor={colors.lightDanger}
-              fillColor={colors.darkDanger}
+              strokeColor={strokeColor}
+              fillColor={fillColor}
             />
           )}
 
           {polygonPoints.length >= 3 && (
             <Polygon
               coordinates={polygonPoints}
-              strokeColor={colors.lightBlue}
-              fillColor={colors.darkBlue}
+              strokeColor={strokeColor}
+              fillColor={fillColor}
               strokeWidth={2}
             />
           )}
@@ -208,8 +217,7 @@ export const MapScreen: FC<MapScreenProps> = ({ navigation, route }) => {
         </Text>
       </TouchableOpacity>
 
-      {/* Drawing Mode Toggle */}
-      {isGeoFencing && (
+      {isGeoFencing && (circleCenter || polygonPoints.length >= 3) && (
         <TouchableOpacity
           style={styles.drawModeButton}
           onPress={() =>
@@ -221,6 +229,22 @@ export const MapScreen: FC<MapScreenProps> = ({ navigation, route }) => {
           </Text>
         </TouchableOpacity>
       )}
+
+      {isGeoFencing && (
+        <TouchableOpacity
+          style={[styles.drawModeButton, { top: 100, bottom: undefined }]}
+          onPress={() => setShowColorPicker(prev => !prev)}
+        >
+          <Text style={styles.buttonText}>🎨 Pick Color</Text>
+        </TouchableOpacity>
+      )}
+
+      <FenceColorPicker
+        showColorPicker={showColorPicker}
+        strokeColor={strokeColor}
+        onSelectColor={onSelectColor}
+      />
+
       <FenceMetadataModal
         name={name}
         description={description}
@@ -251,12 +275,6 @@ const styles = StyleSheet.create({
     backgroundColor: colors.light,
     elevation: 4,
     borderRadius: 10,
-    left: 20,
-  },
-  saveActionWrapper: {
-    position: 'absolute',
-    zIndex: 20,
-    top: 50,
     left: 20,
   },
   recenterButton: {

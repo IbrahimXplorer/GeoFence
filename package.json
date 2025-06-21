@@ -26,13 +26,16 @@
     "react-native": "0.79.3",
     "react-native-android-location-enabler": "^2.0.1",
     "react-native-bootsplash": "^6.3.9",
+    "react-native-gesture-handler": "^2.26.0",
     "react-native-maps": "^1.14.0",
     "react-native-mmkv": "^3.3.0",
     "react-native-permissions": "^5.4.1",
+    "react-native-reanimated": "^3.18.0",
     "react-native-safe-area-context": "^5.4.1",
     "react-native-screens": "^4.11.1",
     "react-native-uuid": "^2.0.3",
     "react-redux": "^9.2.0",
+    "reanimated-color-picker": "^4.1.0",
     "redux-persist": "^6.0.0"
   },
   "devDependencies": {
